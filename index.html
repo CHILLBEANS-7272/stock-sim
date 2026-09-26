@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <meta name="theme-color" content="#ffffff">
+
+    <title>StockSim</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f6f8;
+            color: #17191c;
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Helvetica,
+                Arial,
+                sans-serif;
+        }
+
+
+        /* =========================
+           APP
+        ========================= */
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+
+            margin: auto;
+
+            background: #f7f8fa;
+
+            position: relative;
+        }
+
+
+        /* =========================
+           TOP BAR
+        ========================= */
+
+        .topbar {
+            height: 62px;
+
+            background: white;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 18px;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 10;
+        }
+
+
+        .logo {
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            font-size: 18px;
+
+            font-weight: 600;
+        }
+
+
+        .logo-icon {
+            width: 30px;
+            height: 30px;
+
+            border-radius: 7px;
+
+            background: #111827;
+
+            color: white;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 14px;
+        }
+
+
+        .profile {
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+
+        .avatar {
+            width: 32px;
+            height: 32px;
+
+            border-radius: 50%;
+
+            background: #e8eaed;
+
+            border: 1px solid #d8dade;
+        }
+
+
+        .username {
+            font-size: 13px;
+
+            font-weight: 500;
+        }
+
+
+        /* =========================
+           SIMULATION
+        ========================= */
+
+        .simulation {
+            text-align: center;
+
+            font-size: 9px;
+
+            letter-spacing: 0.7px;
+
+            color: #777;
+
+            padding: 5px;
+
+            background: #f1f2f4;
+
+            border-bottom: 1px solid #ddd;
+        }
+
+
+        /* =========================
+           CONTENT
+        ========================= */
+
+        .content {
+            padding: 20px 16px 95px;
+        }
+
+
+        .page {
+            display: none;
+        }
+
+
+        .page.active {
+            display: block;
+        }
+
+
+        .page-title {
+            margin-bottom: 18px;
+        }
+
+
+        .page-title h1 {
+            margin: 0;
+
+            font-size: 25px;
+
+            font-weight: 650;
+
+            letter-spacing: -0.4px;
+        }
+
+
+        .page-title p {
+            margin: 5px 0 0;
+
+            color: #858990;
+
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           PORTFOLIO BALANCE
+        ========================= */
+
+        .balance-card {
+            background: white;
+
+            border: 1px solid #e2e4e7;
+
+            border-radius: 12px;
+
+            padding: 21px;
+
+            margin-bottom: 14px;
+        }
+
+
+        .label {
+            color: #858990;
+
+            font-size: 12px;
+        }
+
+
+        .balance {
+            font-size: 34px;
+
+            font-weight: 650;
+
+            letter-spacing: -0.8px;
+
+            margin-top: 5px;
+        }
+
+
+        .gain {
+            color: #18864b;
+
+            font-size: 13px;
+
+            font-weight: 500;
+
+            margin-top: 6px;
+        }
+
+
+        .cash-row {
+            border-top: 1px solid #eef0f2;
+
+            margin-top: 17px;
+
+            padding-top: 14px;
+
+            display: flex;
+
+            justify-content: space-between;
+        }
+
+
+        /* =========================
+           STOCK CARD
+        ========================= */
+
+        .card {
+            background: white;
+
+            border: 1px solid #e2e4e7;
+
+            border-radius: 12px;
+
+            padding: 19px;
+
+            margin-bottom: 14px;
+        }
+
+
+        .stock-header {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+
+        .company {
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+        }
+
+
+        .stock-icon {
+            width: 40px;
+            height: 40px;
+
+            border-radius: 9px;
+
+            background: #eef0f2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 15px;
+
+            font-weight: 600;
+        }
+
+
+        .company-name {
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        .ticker {
+            color: #858990;
+
+            font-size: 11px;
+
+            margin-top: 3px;
+        }
+
+
+        .stock-price {
+            text-align: right;
+        }
+
+
+        .price {
+            font-size: 19px;
+
+            font-weight: 600;
+        }
+
+
+        .price-change {
+            color: #18864b;
+
+            font-size: 11px;
+
+            margin-top: 3px;
+        }
+
+
+        /* =========================
+           CHART
+        ========================= */
+
+        .chart {
+            height: 190px;
+
+            margin-top: 22px;
+
+            position: relative;
+
+            border-bottom: 1px solid #eceef0;
+        }
+
+
+        .chart-grid {
+            position: absolute;
+
+            inset: 0;
+
+            background-image:
+                linear-gradient(#f0f1f3 1px, transparent 1px),
+                linear-gradient(90deg, #f0f1f3 1px, transparent 1px);
+
+            background-size: 25% 25%;
+        }
+
+
+        svg {
+            position: absolute;
+
+            width: 100%;
+            height: 100%;
+
+            inset: 0;
+        }
+
+
+        /* =========================
+           TIME BUTTONS
+        ========================= */
+
+        .time-selector {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-top: 12px;
+        }
+
+
+        .time-selector button {
+            border: none;
+
+            background: transparent;
+
+            color: #858990;
+
+            font-size: 11px;
+
+            padding: 6px 10px;
+
+            border-radius: 6px;
+        }
+
+
+        .time-selector button.active {
+            background: #eef0f2;
+
+            color: #222;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           POSITION
+        ========================= */
+
+        .card-title {
+            font-size: 14px;
+
+            font-weight: 600;
+
+            margin-bottom: 12px;
+        }
+
+
+        .row {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 13px 0;
+
+            border-bottom: 1px solid #f0f1f2;
+        }
+
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+
+        .row-label {
+            color: #858990;
+
+            font-size: 12px;
+        }
+
+
+        .row-value {
+            font-size: 13px;
+
+            font-weight: 500;
+        }
+
+
+        .positive {
+            color: #18864b;
+        }
+
+
+        /* =========================
+           MARKETS
+        ========================= */
+
+        .market-row {
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 15px 0;
+
+            border-bottom: 1px solid #eef0f2;
+        }
+
+
+        .market-row:last-child {
+            border-bottom: none;
+        }
+
+
+        .market-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+        }
+
+
+        .mini-icon {
+            width: 38px;
+            height: 38px;
+
+            border-radius: 8px;
+
+            background: #eef0f2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-weight: 600;
+        }
+
+
+        .symbol {
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        .company-small {
+            font-size: 11px;
+
+            color: #858990;
+
+            margin-top: 2px;
+        }
+
+
+        .market-right {
+            text-align: right;
+
+            font-size: 12px;
+        }
+
+
+        .red {
+            color: #c43d3d;
+        }
+
+
+        /* =========================
+           ACTIVITY
+        ========================= */
+
+        .activity-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 15px 0;
+
+            border-bottom: 1px solid #eef0f2;
+        }
+
+
+        .activity-row:last-child {
+            border-bottom: none;
+        }
+
+
+        .activity-left {
+            display: flex;
+
+            align-items: center;
+
+            gap: 11px;
+        }
+
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+
+            border-radius: 50%;
+
+            background: #eef0f2;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 13px;
+        }
+
+
+        .activity-title {
+            font-size: 13px;
+
+            font-weight: 500;
+        }
+
+
+        .activity-date {
+            font-size: 10px;
+
+            color: #858990;
+
+            margin-top: 3px;
+        }
+
+
+        /* =========================
+           WATCHLIST
+        ========================= */
+
+        .watch-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding: 15px 0;
+
+            border-bottom: 1px solid #eef0f2;
+        }
+
+
+        .watch-row:last-child {
+            border-bottom: none;
+        }
+
+
+        /* =========================
+           BOTTOM NAV
+        ========================= */
+
+        .bottom-nav {
+            position: fixed;
+
+            bottom: 0;
+
+            left: 50%;
+
+            transform: translateX(-50%);
+
+            width: 100%;
+
+            max-width: 480px;
+
+            height: 70px;
+
+            background: rgba(255,255,255,0.96);
+
+            backdrop-filter: blur(12px);
+
+            border-top: 1px solid #e2e4e7;
+
+            display: flex;
+
+            justify-content: space-around;
+
+            align-items: center;
+
+            z-index: 20;
+        }
+
+
+        .nav-button {
+            border: none;
+
+            background: none;
+
+            color: #858990;
+
+            display: flex;
+
+            flex-direction: column;
+
+            align-items: center;
+
+            gap: 4px;
+
+            font-family: inherit;
+
+            font-size: 10px;
+
+            cursor: pointer;
+
+            min-width: 65px;
+        }
+
+
+        .nav-icon {
+            font-size: 20px;
+
+            line-height: 20px;
+        }
+
+
+        .nav-button.active {
+            color: #111827;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================= */
+
+        footer {
+            text-align: center;
+
+            color: #999;
+
+            font-size: 9px;
+
+            padding: 15px 0;
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+
+<div class="app">
+
+
+    <!-- TOP BAR -->
+
+    <header class="topbar">
+
+        <div class="logo">
+
+            <div class="logo-icon">
+                $
+            </div>
+
+            StockSim
+
+        </div>
+
+
+        <div class="profile">
+
+            <div class="avatar"></div>
+
+            <div class="username">
+                c.hill
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <div class="simulation">
+        SIMULATION ACCOUNT · FICTIONAL DATA
+    </div>
+
+
+    <!-- CONTENT -->
+
+    <main class="content">
+
+
+        <!-- =========================
+             PORTFOLIO
+        ========================= -->
+
+        <section
+            id="portfolio"
+            class="page active"
+        >
+
+            <div class="page-title">
+
+                <h1>
+                    Portfolio
+                </h1>
+
+                <p>
+                    Your investment overview
+                </p>
+
+            </div>
+
+
+            <div class="balance-card">
+
+                <div class="label">
+                    Total portfolio value
+                </div>
+
+                <div class="balance">
+                    $501,691.79
+                </div>
+
+                <div class="gain">
+                    +$8,421.32 &nbsp; +1.71% today
+                </div>
+
+
+                <div class="cash-row">
+
+                    <span class="label">
+                        Available cash
+                    </span>
+
+                    <strong>
+                        $277.88
+                    </strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="stock-header">
+
+                    <div class="company">
+
+                        <div class="stock-icon">
+                            N
+                        </div>
+
+                        <div>
+
+                            <div class="company-name">
+                                Northstar Technologies
+                            </div>
+
+                            <div class="ticker">
+                                NSTX
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="stock-price">
+
+                        <div class="price">
+                            $251.84
+                        </div>
+
+                        <div class="price-change">
+                            +3.42%
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="chart">
+
+                    <div class="chart-grid"></div>
+
+                    <svg
+                        viewBox="0 0 1000 300"
+                        preserveAspectRatio="none"
+                    >
+
+                        <polyline
+                            points="
+                            0,245
+                            60,230
+                            110,242
+                            165,210
+                            220,220
+                            280,185
+                            340,200
+                            400,160
+                            455,175
+                            510,135
+                            570,150
+                            630,110
+                            690,125
+                            750,92
+                            810,105
+                            870,68
+                            930,82
+                            1000,45
+                            "
+                            fill="none"
+                            stroke="#18864b"
+                            stroke-width="4"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                    </svg>
+
+                </div>
+
+
+                <div class="time-selector">
+
+                    <button class="active">
+                        1D
+                    </button>
+
+                    <button>
+                        1W
+                    </button>
+
+                    <button>
+                        1M
+                    </button>
+
+                    <button>
+                        3M
+                    </button>
+
+                    <button>
+                        1Y
+                    </button>
+
+                    <button>
+                        ALL
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Position
+                </div>
+
+
+                <div class="row">
+
+                    <span class="row-label">
+                        Shares
+                    </span>
+
+                    <span class="row-value">
+                        1,993
+                    </span>
+
+                </div>
+
+
+                <div class="row">
+
+                    <span class="row-label">
+                        Average cost
+                    </span>
+
+                    <span class="row-value">
+                        $247.62
+                    </span>
+
+                </div>
+
+
+                <div class="row">
+
+                    <span class="row-label">
+                        Market value
+                    </span>
+
+                    <span class="row-value">
+                        $501,413.12
+                    </span>
+
+                </div>
+
+
+                <div class="row">
+
+                    <span class="row-label">
+                        Total return
+                    </span>
+
+                    <span class="row-value positive">
+                        +$8,421.32
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             MARKETS
+        ========================= -->
+
+        <section
+            id="markets"
+            class="page"
+        >
+
+            <div class="page-title">
+
+                <h1>
+                    Markets
+                </h1>
+
+                <p>
+                    Market overview
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+                <div class="card-title">
+                    Popular stocks
+                </div>
+
+
+                <div class="market-row">
+
+                    <div class="market-left">
+
+                        <div class="mini-icon">
+                            A
+                        </div>
+
+                        <div>
+
+                            <div class="symbol">
+                                APLX
+                            </div>
+
+                            <div class="company-small">
+                                Apex Labs
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="market-right">
+
+                        <strong>
+                            $184.21
+                        </strong>
+
+                        <div class="positive">
+                            +2.41%
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="market-row">
+
+                    <div class="market-left">
+
+                        <div class="mini-icon">
+                            N
+                        </div>
+
+                        <div>
+
+                            <div class="symbol">
+                                NSTX
+                            </div>
+
+                            <div class="company-small">
+                                Northstar Technologies
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="market-right">
+
+                        <strong>
+                            $251.84
+                        </strong>
+
+                        <div class="positive">
+                            +3.42%
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="market-row">
+
+                    <div class="market-left">
+
+                        <div class="mini-icon">
+                            V
+                        </div>
+
+                        <div>
+
+                            <div class="symbol">
+                                VRTX
+                            </div>
+
+                            <div class="company-small">
+                                Vertex Systems
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="market-right">
+
+                        <strong>
+                            $92.47
+                        </strong>
+
+                        <div class="red">
+                            -1.18%
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="market-row">
+
+                    <div class="market-left">
+
+                        <div class="mini-icon">
+                            Q
+                        </div>
+
+                        <div>
+
+                            <div class="symbol">
+                                QNTM
+                            </div>
+
+                            <div class="company-small">
+                                Quantum Dynamics
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="market-right">
+
+                        <strong>
+                            $76.13
+                        </strong>
+
+                        <div class="positive">
+                            +0.87%
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             ACTIVITY
+        ========================= -->
+
+        <section
+            id="activity"
+            class="page"
+        >
+
+            <div class="page-title">
+
+                <h1>
+                    Activity
+                </h1>
+
+                <p>
+                    Recent account activity
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+
+                <div class="activity-row">
+
+                    <div class="activity-left">
+
+                        <div class="activity-icon">
+                            ↗
+                        </div>
+
+                        <div>
+
+                            <div class="activity-title">
+                                Bought NSTX
+                            </div>
+
+                            <div class="activity-date">
+                                September 26, 2026
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <strong>
+                        1,993 shares
+                    </strong>
+
+                </div>
+
+
+                <div class="activity-row">
+
+                    <div class="activity-left">
+
+                        <div class="activity-icon">
+                            $
+                        </div>
+
+                        <div>
+
+                            <div class="activity-title">
+                                Deposit
+                            </div>
+
+                            <div class="activity-date">
+                                September 24, 2026
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <strong>
+                        $10,000
+                    </strong>
+
+                </div>
+
+
+                <div class="activity-row">
+
+                    <div class="activity-left">
+
+                        <div class="activity-icon">
+                            ↗
+                        </div>
+
+                        <div>
+
+                            <div class="activity-title">
+                                Bought NSTX
+                            </div>
+
+                            <div class="activity-date">
+                                September 22, 2026
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <strong>
+                        500 shares
+                    </strong>
+
+                </div>
+
+
+                <div class="activity-row">
+
+                    <div class="activity-left">
+
+                        <div class="activity-icon">
+                            ✓
+                        </div>
+
+                        <div>
+
+                            <div class="activity-title">
+                                Account created
+                            </div>
+
+                            <div class="activity-date">
+                                September 20, 2026
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <strong>
+                        Complete
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             WATCHLIST
+        ========================= -->
+
+        <section
+            id="watchlist"
+            class="page"
+        >
+
+            <div class="page-title">
+
+                <h1>
+                    Watchlist
+                </h1>
+
+                <p>
+                    Stocks you're following
+                </p>
+
+            </div>
+
+
+            <div class="card">
+
+
+                <div class="watch-row">
+
+                    <div class="market-left">
+
+                        <div class="mini-icon">
+                            A
+                        </div>
+
+                        <div>
+
+                            <div class="symbol">
+                                APLX
+                            </div>
+
+                            <div class="company-small">
+                                Apex Labs
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="market-right">
+
+                        <strong>
+                            $184.21
+                        </strong>
+
+                        <div class="positive">
+                            +2.41%
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="watch-row">
+
+                    <div class="market-left">
+
+                        <div class="mini-icon">
+                            V
+                        </div>
+
+                        <div>
+
+                            <div class="symbol">
+                                VRTX
+                            </div>
+
+                            <div class="company-small">
+                                Vertex Systems
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="market-right">
+
+                        <strong>
+                            $92.47
+                        </strong>
+
+                        <div class="red">
+                            -1.18%
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="watch-row">
+
+                    <div class="market-left">
+
+                        <div class="mini-icon">
+                            Q
+                        </div>
+
+                        <div>
+
+                            <div class="symbol">
+                                QNTM
+                            </div>
+
+                            <div class="company-small">
+                                Quantum Dynamics
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="market-right">
+
+                        <strong>
+                            $76.13
+                        </strong>
+
+                        <div class="positive">
+                            +0.87%
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            StockSim is a fictional investment simulator.
+        </footer>
+
+    </main>
+
+
+    <!-- =========================
+         BOTTOM NAVIGATION
+    ========================= -->
+
+    <nav class="bottom-nav">
+
+        <button
+            class="nav-button active"
+            onclick="showPage('portfolio', this)"
+        >
+
+            <div class="nav-icon">
+                ◉
+            </div>
+
+            Portfolio
+
+        </button>
+
+
+        <button
+            class="nav-button"
+            onclick="showPage('markets', this)"
+        >
+
+            <div class="nav-icon">
+                ◫
+            </div>
+
+            Markets
+
+        </button>
+
+
+        <button
+            class="nav-button"
+            onclick="showPage('activity', this)"
+        >
+
+            <div class="nav-icon">
+                ≡
+            </div>
+
+            Activity
+
+        </button>
+
+
+        <button
+            class="nav-button"
+            onclick="showPage('watchlist', this)"
+        >
+
+            <div class="nav-icon">
+                ☆
+            </div>
+
+            Watchlist
+
+        </button>
+
+    </nav>
+
+</div>
+
+
+<script>
+
+    function showPage(page, button) {
+
+        // Hide all pages
+
+        const pages = document.querySelectorAll(".page");
+
+        pages.forEach(function(pageElement) {
+
+            pageElement.classList.remove("active");
+
+        });
+
+
+        // Show selected page
+
+        document.getElementById(page).classList.add("active");
+
+
+        // Remove active navigation
+
+        const buttons =
+            document.querySelectorAll(".nav-button");
+
+        buttons.forEach(function(navButton) {
+
+            navButton.classList.remove("active");
+
+        });
+
+
+        // Activate selected button
+
+        button.classList.add("active");
+
+
+        // Scroll back to top
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    }
+
+</script>
+
+
+</body>
+</html>
